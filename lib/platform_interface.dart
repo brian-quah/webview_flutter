@@ -381,6 +381,7 @@ class WebSettings {
     this.javascriptMode,
     this.hasNavigationDelegate,
     this.debuggingEnabled,
+    this.scrollViewBounces,
     this.gestureNavigationEnabled,
     @required this.userAgent,
   }) : assert(userAgent != null);
@@ -395,6 +396,8 @@ class WebSettings {
   ///
   /// See also: [WebView.debuggingEnabled].
   final bool debuggingEnabled;
+
+  final bool scrollViewBounces;
 
   /// The value used for the HTTP `User-Agent:` request header.
   ///

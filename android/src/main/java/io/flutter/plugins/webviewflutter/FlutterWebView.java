@@ -317,6 +317,9 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
         case "userAgent":
           updateUserAgent((String) settings.get(key));
           break;
+        case "scrollViewBounces":
+          // ignore
+          break;
         default:
           throw new IllegalArgumentException("Unknown WebView setting: " + key);
       }

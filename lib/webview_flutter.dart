@@ -148,6 +148,7 @@ class WebView extends StatefulWidget {
     this.javascriptChannels,
     this.navigationDelegate,
     this.gestureRecognizers,
+    this.scrollViewBounces = true,
     this.onPageStarted,
     this.onPageFinished,
     this.onWebResourceError,
@@ -300,6 +301,11 @@ class WebView extends StatefulWidget {
   /// By default `debuggingEnabled` is false.
   final bool debuggingEnabled;
 
+  /// Controls whether WebView have bounce effect in iOS
+  ///
+  /// By default `scrollViewBounces` is true.
+  final bool scrollViewBounces;
+
   /// A Boolean value indicating whether horizontal swipe gestures will trigger back-forward list navigations.
   ///
   /// This only works on iOS.
@@ -401,6 +407,7 @@ WebSettings _webSettingsFromWidget(WebView widget) {
     javascriptMode: widget.javascriptMode,
     hasNavigationDelegate: widget.navigationDelegate != null,
     debuggingEnabled: widget.debuggingEnabled,
+    scrollViewBounces: widget.scrollViewBounces,
     gestureNavigationEnabled: widget.gestureNavigationEnabled,
     userAgent: WebSetting<String>.of(widget.userAgent),
   );
@@ -421,6 +428,7 @@ WebSettings _clearUnchangedWebSettings(
   JavascriptMode javascriptMode;
   bool hasNavigationDelegate;
   bool debuggingEnabled;
+  bool scrollViewBounces;
   WebSetting<String> userAgent = WebSetting<String>.absent();
   if (currentValue.javascriptMode != newValue.javascriptMode) {
     javascriptMode = newValue.javascriptMode;
@@ -434,11 +442,15 @@ WebSettings _clearUnchangedWebSettings(
   if (currentValue.userAgent != newValue.userAgent) {
     userAgent = newValue.userAgent;
   }
+  if (currentValue.scrollViewBounces != newValue.scrollViewBounces) {
+    scrollViewBounces = newValue.scrollViewBounces;
+  }
 
   return WebSettings(
     javascriptMode: javascriptMode,
     hasNavigationDelegate: hasNavigationDelegate,
     debuggingEnabled: debuggingEnabled,
+    scrollViewBounces: scrollViewBounces,
     userAgent: userAgent,
   );
 }

@@ -810,6 +810,50 @@ void main() {
     });
   });
 
+  group('scrollViewBounces', () {
+    testWidgets('enable scrollView bounce', (WidgetTester tester) async {
+      await tester.pumpWidget(const WebView(
+        scrollViewBounces: true,
+      ));
+
+      final FakePlatformWebView platformWebView =
+          fakePlatformViewsController.lastCreatedView;
+
+      expect(platformWebView.scrollViewBounces, true);
+    });
+
+    testWidgets('defaults to true', (WidgetTester tester) async {
+      await tester.pumpWidget(const WebView());
+
+      final FakePlatformWebView platformWebView =
+          fakePlatformViewsController.lastCreatedView;
+
+      expect(platformWebView.scrollViewBounces, true);
+    });
+
+    testWidgets('can be changed', (WidgetTester tester) async {
+      final GlobalKey key = GlobalKey();
+      await tester.pumpWidget(WebView(key: key));
+
+      final FakePlatformWebView platformWebView =
+          fakePlatformViewsController.lastCreatedView;
+
+      await tester.pumpWidget(WebView(
+        key: key,
+        scrollViewBounces: false,
+      ));
+
+      expect(platformWebView.scrollViewBounces, false);
+
+      await tester.pumpWidget(WebView(
+        key: key,
+        scrollViewBounces: true,
+      ));
+
+      expect(platformWebView.scrollViewBounces, true);
+    });
+  });
+
   group('Custom platform implementation', () {
     setUpAll(() {
       WebView.platform = MyWebViewPlatform();
@@ -837,6 +881,7 @@ void main() {
               javascriptMode: JavascriptMode.disabled,
               hasNavigationDelegate: false,
               debuggingEnabled: false,
+              scrollViewBounces: true,
               userAgent: WebSetting<String>.of(null),
               gestureNavigationEnabled: true,
             ),
@@ -908,6 +953,7 @@ class FakePlatformWebView {
     hasNavigationDelegate =
         params['settings']['hasNavigationDelegate'] ?? false;
     debuggingEnabled = params['settings']['debuggingEnabled'];
+    scrollViewBounces = params['settings']['scrollViewBounces'];
     userAgent = params['settings']['userAgent'];
     channel = MethodChannel(
         'plugins.flutter.io/webview_$id', const StandardMethodCodec());
@@ -927,6 +973,7 @@ class FakePlatformWebView {
 
   bool hasNavigationDelegate;
   bool debuggingEnabled;
+  bool scrollViewBounces;
   String userAgent;
 
   Future<dynamic> onMethodCall(MethodCall call) {
@@ -944,6 +991,9 @@ class FakePlatformWebView {
         }
         if (call.arguments['debuggingEnabled'] != null) {
           debuggingEnabled = call.arguments['debuggingEnabled'];
+        }
+        if (call.arguments['scrollViewBounces'] != null) {
+          scrollViewBounces = call.arguments['scrollViewBounces'];
         }
         userAgent = call.arguments['userAgent'];
         break;
@@ -1186,6 +1236,7 @@ class MatchesWebSettings extends Matcher {
         _webSettings.debuggingEnabled == webSettings.debuggingEnabled &&
         _webSettings.gestureNavigationEnabled ==
             webSettings.gestureNavigationEnabled &&
+        _webSettings.scrollViewBounces == webSettings.scrollViewBounces &&
         _webSettings.userAgent == webSettings.userAgent;
   }
 }

@@ -1,5 +1,7 @@
 # WebView for Flutter (Developers Preview)
 
+From official version 0.3.22+1
+
 [![pub package](https://img.shields.io/pub/v/webview_flutter.svg)](https://pub.dartlang.org/packages/webview_flutter)
 
 A Flutter plugin that provides a WebView widget.
